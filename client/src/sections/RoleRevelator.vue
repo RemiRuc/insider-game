@@ -1,7 +1,15 @@
 <template>
     <div class="section">
-        <p class="box bg-grey">Tu es : {{roleMapping[role.role]}}</p>
-        <p v-if="['master', 'insider'].includes(role.role)">Voici le mot à faire deviner : {{role.word}}</p>
+        <div class="block card">
+            <img v-if="role.role == 'master'" src="../assets/img/master.svg"/>
+            <img v-else-if="role.role == 'insider'" src="../assets/img/insider.svg"/>
+            <img v-else-if="role.role == 'citoyen'" src="../assets/img/citoyen.svg"/>
+            <p class="role">{{roleMapping[role.role]}}</p>
+        </div>
+        <div v-if="['master', 'insider'].includes(role.role)">
+            <p>Voici le mot à faire deviner : </p>
+            <p>{{role.word}}</p>
+        </div>
         <button v-if="role.role == 'master'" @click="startChrono">Commencer</button>
     </div>
 </template>
@@ -11,9 +19,9 @@ export default {
     data() {
         return {
             roleMapping: {
-                'master': 'Maitre du jeu',
-                'insider': 'Infiltré',
-                'citoyen': 'Citoyen',
+                'master': 'MAITRE DU JEU',
+                'insider': 'TRAITRE',
+                'citoyen': 'CITOYEN',
             }
         } 
     },

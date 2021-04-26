@@ -1,8 +1,10 @@
 <template>
-  <MainMenu v-if="room.isPlaying == false && menu == 'home'" @changeMenu="changeMenu" />
-  <RoomSas v-else-if="room.isPlaying == false && menu == 'room'" @changeMenu="changeMenu"/>
-  <RoleRevelator v-else-if="room.isPlaying && menu == 'roleRevelator'" @changeMenu="changeMenu"/>
-  <Chrono v-else-if="room.isPlaying && menu == 'chrono'" @changeMenu="changeMenu" />
+  <transition name="fade" mode="out-in">
+  <MainMenu key="1" v-if="room.isPlaying == false && menu == 'home'" @changeMenu="changeMenu" />
+  <RoomSas key="2" v-else-if="room.isPlaying == false && menu == 'room'" @changeMenu="changeMenu"/>
+  <RoleRevelator key="3" v-else-if="room.isPlaying && menu == 'roleRevelator'" @changeMenu="changeMenu"/>
+  <Chrono key="4" v-else-if="room.isPlaying && menu == 'chrono'" @changeMenu="changeMenu" />
+  </transition>
 
   <MyFooter/>
 </template>
@@ -36,6 +38,11 @@ export default {
       this.menu = menu
     }
   },
+  mounted() {
+    window.addEventListener('beforeunload', () => {
+      this.socket.emit('leaveRoom')
+    })
+  }
 }
 </script>
 
