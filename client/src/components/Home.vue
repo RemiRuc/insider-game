@@ -32,6 +32,7 @@ export default {
   },
   methods: {
     changeMenu(menu) {
+      console.log(menu, this.room)
       this.menu = menu
     }
   },

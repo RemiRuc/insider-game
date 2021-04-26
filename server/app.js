@@ -41,16 +41,23 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('startGame', () => {
+    socket.on('startGame', (word) => {
         const otherPlayers = Object.assign({}, Rooms[socket.roomCode].players)
         delete otherPlayers[socket.id]
         const otherPlayersIds = Object.keys(otherPlayers)
         Rooms[socket.roomCode].isPlaying = true
-        setRoles(otherPlayersIds, socket)
+        setRoles(otherPlayersIds, word, socket)
     })
 
     socket.on('startChrono', () => {
         io.in(socket.roomCode).emit('chronoStarted')
+    })
+
+    socket.on('endGame', () => {
+        console.log("endGame")
+        Rooms[socket.roomCode].isPlaying = false
+        io.in(socket.roomCode).emit('usersRoomUpdated', Rooms[socket.roomCode])
+        io.in(socket.roomCode).emit('gameEnded')
     })
 })
 
@@ -111,7 +118,7 @@ function leaveRoom(roomCode, socket) {
     console.log(Rooms)
 }
 
-function setRoles(otherPlayersIds, socket) {
+function setRoles(otherPlayersIds, word, socket) {
     io.in(socket.roomCode).emit('usersRoomUpdated', Rooms[socket.roomCode])
     const gameMaster = socket.id
 
@@ -124,7 +131,7 @@ function setRoles(otherPlayersIds, socket) {
         }
         if (index == insiderIndex) {
             role.role = 'insider'
-            role.word = 'le mot'
+            role.word = word
         }
 
         io.in(otherPlayersIds[index]).emit('setRole', role)
@@ -132,6 +139,6 @@ function setRoles(otherPlayersIds, socket) {
 
     io.in(gameMaster).emit('setRole', {
         role: 'master',
-        word : 'le mot'
+        word : word
     })
 }

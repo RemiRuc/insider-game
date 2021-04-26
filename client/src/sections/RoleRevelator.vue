@@ -29,7 +29,7 @@ export default {
         }
     },
     mounted() {
-        this.socket.on('chronoStarted', () => {
+        this.socket.once('chronoStarted', () => {
             this.$emit('changeMenu', 'chrono')
         })
     },

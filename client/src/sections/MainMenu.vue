@@ -39,6 +39,11 @@ export default {
             this.$emit('changeMenu', 'room')
             console.log(codeRoom)
         })
+
+        this.socket.on('usersRoomUpdated', (room) => {
+            this.$store.dispatch("socket/setRoom", room)
+            console.log(room)
+        })
     }
 }
 </script>

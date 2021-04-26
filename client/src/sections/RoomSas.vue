@@ -4,12 +4,19 @@
         <ul v-if="room.players">
             <li :key="i" v-for="(player, i) in room.players" class="box bd-grey">{{player}}</li>
         </ul>
+        <label for="word">Choisi un mot</label>
+        <input type="text" name="word" v-model="word">
         <button @click="startGame()">C'est moi qui fait deviner !</button>
     </div>
 </template>
 
 <script>
 export default {
+    data() {
+        return {
+            word: ''
+        }
+    },
     computed: {
         socket() {
             return this.$store.getters["socket/socket"]
@@ -20,15 +27,11 @@ export default {
     },
     methods: {
         startGame() {
-            this.socket.emit('startGame')
+            this.socket.emit('startGame', this.word)
         },
     },
     mounted() {
-        this.socket.on('usersRoomUpdated', (room) => {
-            this.$store.dispatch("socket/setRoom", room)
-        })
-
-        this.socket.on('setRole', (role) => {
+        this.socket.once('setRole', (role) => {
             this.$store.dispatch("socket/setRole", role)
             this.$emit('changeMenu', 'roleRevelator')
         })
