@@ -5,7 +5,7 @@ const Http = require('http').Server(Express)
 const path = require('path')
 const io = require('socket.io')(Http, {
     cors: {
-        origin: "http://localhost:8080",
+        origin: process.env.CORS,
         methods: ["GET", "POST"]
       }
 })
