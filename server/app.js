@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const Express = express()
 const Http = require('http').Server(Express)
@@ -53,8 +54,8 @@ io.on('connection', (socket) => {
     })
 })
 
-Http.listen(3000, () => {
-    
+Http.listen(process.env.PORT || 3000, () => {
+    console.log(process.env.PORT)
 })
 
 function generateRoomCode() {

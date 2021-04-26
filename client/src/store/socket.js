@@ -31,7 +31,7 @@ export default {
      },
      actions: {
         async setSocket({ commit }) {
-            commit('set_socket', io('http://localhost:3000'))
+            commit('set_socket', io(process.env.VUE_APP_URL))
         },
         async setRoom({ commit }, room) {
             commit('set_room', room)
