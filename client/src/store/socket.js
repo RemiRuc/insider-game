@@ -5,7 +5,12 @@ export default {
      state: {
         socket: null,
         room: {isPlaying: false},
-        role: {}
+        role: {},
+        result: {
+            votedFor : null,
+            hasEqual : null,
+            result : false
+        }
      },
      getters: {
         socket(state) {
@@ -17,6 +22,29 @@ export default {
         role(state) {
             return state.role
         },
+        finder(state) {
+            const keys = Object.keys(state.room.players)
+            console.log(keys.length)
+            for (let index = 0; index < keys.length; index++) {
+                console.log(state.room.players[keys[index]])
+                if (state.room.players[keys[index]].finded) {
+                    return state.room.players[keys[index]]
+                }
+            }
+        },
+        insider(state) {
+            const keys = Object.keys(state.room.players)
+            console.log(keys.length)
+            for (let index = 0; index < keys.length; index++) {
+                console.log(state.room.players[keys[index]])
+                if (state.room.players[keys[index]].role == 'insider') {
+                    return state.room.players[keys[index]]
+                }
+            }
+        },
+        result(state) {
+            return state.result
+        }
      },
      mutations: {
         ['set_socket'](state, socket) {
@@ -28,6 +56,9 @@ export default {
         ['set_role'](state, role) {
             state.role = role
         },
+        ['set_result'](state, result) {
+            state.result = result
+        },
      },
      actions: {
         async setSocket({ commit }) {
@@ -38,6 +69,9 @@ export default {
         },
         async setRole({ commit }, role) {
             commit('set_role', role)
+        },
+        async setResult({ commit }, result) {
+            commit('set_result', result)
         }
      }
 }

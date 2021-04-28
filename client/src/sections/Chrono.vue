@@ -2,6 +2,7 @@
     <div class="section">
         <p>{{minutes > 9 ? minutes : '0' + minutes}}:{{secondes > 9 ? secondes : '0' + secondes}}</p>
         <button v-if="role.role == 'master'" @click="endGame">Fin de la partie</button>
+        <button v-else @click="findWord">J'ai trouvé.e !!</button>
     </div>
 </template>
 
@@ -30,6 +31,10 @@ export default {
         this.socket.once('gameEnded', () => {
             this.$emit('changeMenu', 'room')
         })
+
+        this.socket.once('wordFinded', () => {
+            this.$emit('changeMenu', 'isInsiderVote')
+        })
     },
     methods: {
         countdown() {
@@ -44,6 +49,11 @@ export default {
         },
         endGame() {
             this.socket.emit('endGame')
+            clearInterval(this.interval)
+        },
+        findWord() {
+            this.role.finded = true
+            this.socket.emit('findWord')
             clearInterval(this.interval)
         }
     }

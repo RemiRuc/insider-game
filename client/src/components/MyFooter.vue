@@ -1,7 +1,7 @@
 <template>
     <footer>
         <p>Developed by <a href="https://remiruc.fr" target="_blank">Rémi Rucojevic</a></p>
-        <p><a href="https://remiruc.fr" target="_blank">Twitter</a> | <a href="https://remiruc.fr" target="_blank">Instagram</a></p>
+        <p><a href="https://twitter.com/RemiRuc" target="_blank">Twitter</a> | <a href="https://www.instagram.com/remiruc" target="_blank">Instagram</a></p>
     </footer>
 </template>
 

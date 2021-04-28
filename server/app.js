@@ -59,8 +59,84 @@ io.on('connection', (socket) => {
         io.in(socket.roomCode).emit('chronoStarted')
     })
 
+    socket.on('findWord', () => {
+        Rooms[socket.roomCode].players[socket.id].finded = true
+        io.in(socket.roomCode).emit('usersRoomUpdated', Rooms[socket.roomCode])
+        io.in(socket.roomCode).emit('wordFinded')
+    })
+
+    socket.on('hasVote', (vote) => {
+        Rooms[socket.roomCode].votes.push(vote)
+        // On regarde si tout le monde a voté
+        const numberOfVoter = Object.keys(Rooms[socket.roomCode].players).length - 1
+        if (Rooms[socket.roomCode].votes.length >= numberOfVoter) {
+            // On calcul le nombre de vote disant que la personne est traitre
+            let result = 0
+            for (let index = 0; index < Rooms[socket.roomCode].votes.length; index++) {
+                if (Rooms[socket.roomCode].votes[index]) {
+                    result++
+                }
+            }
+
+            if (result > Rooms[socket.roomCode].votes.length / 2) {
+                // Si plus de la moitié on répondu oui
+                io.in(socket.roomCode).emit('isInsider', checkIfFinderIsInsider(socket))
+            } else {
+                io.in(socket.roomCode).emit('isNotInsider')
+            }
+        }
+    })
+
+    socket.on('hasVotePlayer', (vote) => {
+        Rooms[socket.roomCode].votesPlayers.push(vote)
+        const numberOfVoter = Object.keys(Rooms[socket.roomCode].players).length
+        if (Rooms[socket.roomCode].votesPlayers.length >= numberOfVoter) {
+            // Compte le nombre de vote pour chaque pesonne
+            var counts = {};
+            Rooms[socket.roomCode].votesPlayers.forEach((x) => { counts[x] = (counts[x] || 0)+1; });
+
+            const keys = Object.keys(counts)
+
+            // Check qui a le plus de nombre de vote
+            let premier = {id: null, count: 0}
+            let premierHasEqual = false
+
+            for (let i = 0; i < keys.length; i++) {
+                if (i = 0) {
+                    premier = {id: keys[i], count: counts[keys[i]]}
+                } else {
+                    if (counts[keys[i]] > premier.count) {
+                        // Si le premier se fait dépasser
+                        premier = {id: keys[i], count: counts[keys[i]]}
+                        premierHasEqual = false
+                    } else if (counts[keys[i]] == premier.count) {
+                        // Si le premier a une égalité
+                        premierHasEqual = true
+                    }
+                }
+            }
+
+            const result = {
+                votedFor : Rooms[socket.roomCode].players[premier.id],
+                hasEqual : premierHasEqual,
+                result : Rooms[socket.roomCode].players[premier.id].role == 'insider'
+            }
+            
+            io.in(socket.roomCode).emit('insiderIs', result)
+        }
+    })
+
     socket.on('endGame', () => {
         console.log("endGame")
+        let playersIds = Object.keys(Rooms[socket.roomCode].players)
+        for (let i = 0; i < playersIds.length; i++) {
+            console.log(Rooms[socket.roomCode].players[playersIds[i]])
+            Rooms[socket.roomCode].players[playersIds[i]].role = null
+            Rooms[socket.roomCode].players[playersIds[i]].vote = null
+            Rooms[socket.roomCode].players[playersIds[i]].finded = false
+            Rooms[socket.roomCode].votes = []
+            Rooms[socket.roomCode].votesPlayers = []
+        }
         Rooms[socket.roomCode].isPlaying = false
         io.in(socket.roomCode).emit('usersRoomUpdated', Rooms[socket.roomCode])
         io.in(socket.roomCode).emit('gameEnded')
@@ -102,7 +178,11 @@ function joinRoom(roomCode, nickname, socket) {
     socket.nickname = nickname
 
     // On ajoute le joueur aux datas de la room
-    Rooms[socket.roomCode].players[socket.id] = socket.nickname
+    Rooms[socket.roomCode].players[socket.id] = {
+        nickname: socket.nickname,
+        role: null,
+        vote: null
+    }
 
     io.in(roomCode).emit('usersRoomUpdated', Rooms[roomCode])
 
@@ -117,8 +197,10 @@ function leaveRoom(roomCode, socket) {
     io.in(roomCode).emit('usersRoomUpdated', Rooms[roomCode])
 
     // On check si la room a encore des joueurs. Si la room est vide, on la supprime
-    if (Object.keys(Rooms[socket.roomCode].players).length <= 0) {
-        delete Rooms[roomCode]
+    if (Rooms[socket.roomCode]) {
+        if (Object.keys(Rooms[socket.roomCode].players).length <= 0) {
+            delete Rooms[roomCode]
+        }
     }
 
     console.log(Rooms)
@@ -145,12 +227,40 @@ function setRoles(otherPlayersIds, options, socket) {
             role.word = options.word
         }
 
+        Rooms[socket.roomCode].players[otherPlayersIds[index]].role = role.role
         io.in(otherPlayersIds[index]).emit('setRole', role)
     }
 
+    Rooms[socket.roomCode].players[socket.id].role = 'master'
     io.in(gameMaster).emit('setRole', {
         role: 'master',
         word : options.word,
         timer : options.timer
     })
+
+    io.in(socket.roomCode).emit('usersRoomUpdated', Rooms[socket.roomCode])
+}
+
+function checkIfFinderIsInsider(socket) {
+    const keys = Object.keys(Rooms[socket.roomCode].players)
+    for (let index = 0; index < keys.length; index++) {
+        const role = Rooms[socket.roomCode].players[keys[index]].role
+        const finded = Rooms[socket.roomCode].players[keys[index]].finded
+        
+        if (finded) {
+            if (role == 'insider') {
+                return {
+                    votedFor : null,
+                    hasEqual : null,
+                    result : true
+                }
+            } else {
+                return {
+                    votedFor : null,
+                    hasEqual : null,
+                    result : false
+                }
+            }
+        }
+    }
 }

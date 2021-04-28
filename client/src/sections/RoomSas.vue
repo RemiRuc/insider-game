@@ -4,7 +4,7 @@
         <div class="block">
             <p class="block-title">Liste des joueurs</p>
             <ul v-if="room.players">
-                <li :key="i" v-for="(player, i) in room.players" class="box bd-grey">{{player}}</li>
+                <li :key="i" v-for="(player, i) in room.players" class="box bd-grey">{{player.nickname}}</li>
             </ul>
         </div>
         <div class="block">
