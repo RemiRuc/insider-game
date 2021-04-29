@@ -1,20 +1,20 @@
 <template>
     <div class="section">
-        <h1>INSIDER</h1>
+        <h1>{{$t("insider")}}</h1>
         <div class="block nickname">
-            <p class="block-title">Ton nom</p>
-            <label for="nickname">Entre un pseudo</label>
+            <p class="block-title">{{$t("mainMenu.tonNom")}}</p>
+            <label for="nickname">{{$t("mainMenu.entrePseudo")}}</label>
             <input name="nickname" v-model="nickname" type="text" autocomplete="off" />
         </div>
         <div class="block" :class="{'disabled': nickname.length <= 0}">
-            <p class="block-title">Rejoindre une room</p>
-            <label for="code">Entre un code</label>
+            <p class="block-title">{{$t("mainMenu.rejoindreRoom")}}</p>
+            <label for="code">{{$t("mainMenu.entreCode")}}</label>
             <input name="code" v-model="code" type="text" autocomplete="off" :disabled="nickname.length <= 0" />
-            <input type="submit" value="Rejoindre" @click="joinRoom()" :disabled="nickname.length <= 0">
+            <input type="submit" :value='$t("mainMenu.rejoindre")' @click="joinRoom()" :disabled="nickname.length <= 0">
         </div>
         <div class="block" :class="{'disabled': nickname.length <= 0}">
-            <p class="block-title">Créer une room</p>
-            <input type="submit" value="Créer" @click="createRoom()" :disabled="nickname.length <= 0">
+            <p class="block-title">{{$t("mainMenu.creerRoom")}}</p>
+            <input type="submit" :value='$t("mainMenu.creer")' @click="createRoom()" :disabled="nickname.length <= 0">
         </div>
     </div>
 </template>
@@ -58,6 +58,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    h1 {
+        text-transform: uppercase;
+    }
     .nickname {
         margin-bottom: 50px;
     }

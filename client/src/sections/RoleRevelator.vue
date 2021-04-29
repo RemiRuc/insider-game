@@ -4,13 +4,13 @@
             <img v-if="role.role == 'master'" src="../assets/img/master.svg"/>
             <img v-else-if="role.role == 'insider'" src="../assets/img/insider.svg"/>
             <img v-else-if="role.role == 'citoyen'" src="../assets/img/citoyen.svg"/>
-            <p class="role">{{roleMapping[role.role]}}</p>
+            <p class="role">{{$t("role." + role.role)}}</p>
         </div>
         <div v-if="['master', 'insider'].includes(role.role)">
-            <p>Voici le mot à faire deviner : </p>
+            <p>{{$t("roleRevelator.faireDeviner")}} : </p>
             <p>{{role.word}}</p>
         </div>
-        <button v-if="role.role == 'master'" @click="startChrono">Commencer</button>
+        <button v-if="role.role == 'master'" @click="startChrono">{{$t("roleRevelator.commencer")}}</button>
     </div>
 </template>
 

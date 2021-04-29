@@ -2,15 +2,15 @@
     <div class="section">
         <div class="block card">
             <img src="../assets/img/master.svg"/>
-            <p v-if="finder" class="role">{{finder.nickname}} a trouvé.e le mot</p>
+            <p v-if="finder" class="role">{{finder.nickname}} {{$t("vote.trouveMot")}}</p>
         </div>
         <div v-if="!hasVote && !role.finded" class="block">
-            <p class="block-title">Cette personne est-elle le traitre ?</p>
-            <button @click="vote(true)">Oui</button>
-            <button @click="vote(false)">Non</button>
+            <p class="block-title">{{$t("vote.estTElleTraitre")}}</p>
+            <button @click="vote(true)">{{$t("vote.oui")}}</button>
+            <button @click="vote(false)">{{$t("vote.non")}}</button>
         </div>
         <div v-else class="box bd-grey">
-            En attente des autres joueurs
+            {{$t("vote.attente")}}
         </div>
     </div>
 </template>

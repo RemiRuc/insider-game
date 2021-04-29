@@ -22,12 +22,14 @@ export default {
  src: url("./assets/paytone/PaytoneOne-Regular.ttf");
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
 $white:  #cbcecb;
 $bg-color: #171817;
 
 * {
   box-sizing: border-box;
-  font-family: "PaytoneOne", Avenir, Helvetica, Arial, sans-serif;
+  font-family: "PaytoneOne", 'Russo One', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -52,16 +54,17 @@ body {
 }
 
 .section {
+  max-width: 280px;
+
   display: flex;
   flex-direction: column;
-
-  max-width: 280px;
 
   margin: auto;
 }
 
 input[type=text], input[type=submit], input[type=number],button {
     width: 100%;
+    max-width: 280px;
 
     border: none;
     border-radius: 50%;
@@ -74,6 +77,10 @@ input[type=text], input[type=submit], input[type=number],button {
     &:focus {
       border-radius: 25%;
     }
+}
+
+label {
+  margin: 10px;
 }
 
 input[type=submit], button {
@@ -138,8 +145,9 @@ input[type=submit], button {
         margin: auto;
 
         .role {
-          font-size: 1.9rem;
-          line-height: 1.9rem;
+          font-size: 1.5rem;
+          line-height: 1.5rem;
+          text-transform: uppercase;
         }
     }
 

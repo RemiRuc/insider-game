@@ -1,8 +1,8 @@
 <template>
     <div class="section">
         <p>{{minutes > 9 ? minutes : '0' + minutes}}:{{secondes > 9 ? secondes : '0' + secondes}}</p>
-        <button v-if="role.role == 'master'" @click="endGame">Fin de la partie</button>
-        <button v-else @click="findWord">J'ai trouvé.e !!</button>
+        <button v-if="role.role == 'master'" @click="endGame">{{$t("chrono.finDuJeu")}}</button>
+        <button v-else @click="findWord">{{$t("chrono.trouve")}}</button>
     </div>
 </template>
 

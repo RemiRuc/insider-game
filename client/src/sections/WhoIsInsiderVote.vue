@@ -1,7 +1,8 @@
 <template>
     <div class="section">
+        <p>{{$t("vote.quiEstTraitre")}}</p>
         <div v-if="!hasVote" class="block">
-            <p class="block-title">Liste des joueurs</p>
+            <p class="block-title">{{$t("roomSas.listeJoueurs")}}</p>
             <ul v-if="room.players">
                 <li :key="i" v-for="(player, key, i) in room.players" class="box bd-grey">
                     <span v-if="player.role == 'master' || player.finded">{{player.nickname}}</span>
@@ -10,7 +11,7 @@
             </ul>
         </div>
         <div v-else class="box bd-grey">
-            En attente des autres joueurs
+            {{$t("vote.attente")}}
         </div>
     </div>
 </template>

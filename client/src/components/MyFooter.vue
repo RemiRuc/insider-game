@@ -1,12 +1,52 @@
 <template>
-    <footer>
-        <p>Developed by <a href="https://remiruc.fr" target="_blank">Rémi Rucojevic</a></p>
-        <p><a href="https://twitter.com/RemiRuc" target="_blank">Twitter</a> | <a href="https://www.instagram.com/remiruc" target="_blank">Instagram</a></p>
-    </footer>
+    <div class="footer-ctn">
+        <div class="footer-anim" :class="{'open': open}">
+            <p class="open-close-btn" @click="open = !open">{{ open ? $t('footer.fermer') : $t('footer.options')}}</p>
+            <footer>
+                <p>{{$t("footer.developpePar")}} <a href="https://remiruc.fr" target="_blank">{{$t("footer.remiRucojevic")}}</a></p>
+                <p class="rs"><a href="https://twitter.com/RemiRuc" target="_blank">{{$t("footer.twitter")}}</a> | <a href="https://www.instagram.com/remiruc" target="_blank">{{$t("footer.insta")}}</a></p>
+                <LocalSwitcher/>
+            </footer>
+        </div>
+    </div>
 </template>
 
+<script>
+import LocalSwitcher from './LocalSwitcher'
+
+export default {
+    data() {
+        return {
+            open: false
+        }
+    },
+    components: {LocalSwitcher}
+}
+</script>
+
 <style lang="scss" scoped>
+    .open-close-btn {
+        cursor: pointer;
+    }
+    .footer-ctn {
+        width: 100%;
+        overflow: hidden;
+
+        .footer-anim {
+            width: 100%;
+
+            transform: translateY(45px);
+
+            transition: .3s;
+
+            &.open {
+                transform: translateY(0px);
+            }
+        }
+    }
+
     footer {
+        position: relative;
         bottom: 0;
         left: 0;
         right: 0;
@@ -26,6 +66,12 @@
 
         p {
             margin: 2px 0;
+        }
+
+        .rs {
+            a {
+                margin: 0 10px;
+            }
         }
     }
 </style>

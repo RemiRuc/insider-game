@@ -11,6 +11,7 @@ const io = require('socket.io')(Http, {
 })
 const Room = require('./Room.js')
 const Nickname = require('./nicknames')
+const WordsList = require('./words')
 
 Express.use(express.static(path.join(__dirname, "../client/dist/")))
 
@@ -53,6 +54,11 @@ io.on('connection', (socket) => {
         const otherPlayersIds = Object.keys(otherPlayers)
         Rooms[socket.roomCode].isPlaying = true
         setRoles(otherPlayersIds, options, socket)
+    })
+
+    socket.on('randomWord', () => {
+        const i = Math.floor(Math.random() * WordsList.length)
+        socket.emit('randomWord', WordsList[i])
     })
 
     socket.on('startChrono', () => {
